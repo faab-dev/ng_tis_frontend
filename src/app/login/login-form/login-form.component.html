@@ -1,0 +1,54 @@
+
+
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+  <h1 data-i18n-text="auth_type_login_title">{{ 'login.form' | translate }}</h1>
+  <app-form-error [display_error]="true" [errors]="formErrors"></app-form-error>
+
+  <div class="uma_type_login_loginname">
+    <input type="text" id="login" placeholder="{{'login.username' | translate }}" formControlName="login" class="form-control" required #spy>
+    <app-form-error [display_error]="helperIsValideForm('login')" [errors]="loginForm.controls.login.errors"></app-form-error>
+    <!-- [ngClass]="{ 'is-invalid': submitted && login.errors }"  -->
+
+    <!--<br>TODO: remove this: {{spy.className}}-->
+    <!--<br>login: {{loginForm.controls.login.valide | json }}-->
+  </div>
+  <div class="uma_type_login_loginpass">
+    <input type="password"  placeholder="{{'login.password' | translate }}" formControlName="password" class="form-control" required >
+    <!-- [ngClass]="{ 'is-invalid': submitted && f.password.errors }" data-i18n-placeholder="auth_type_login_password" -->
+    <app-form-error [display_error]="helperIsValideForm('password')" [errors]="helperGetErrors('password')"></app-form-error>
+  </div>
+  <div class="uma_type_login_error uma_err"></div>
+  <!-- [disabled]="loading" -->
+  <div (click)="onClickAcceptForm()" [ngClass]="{'loading': loading}" appValidateFormOnBlur>
+    <span class="uma_button_login" data-i18n-text="auth_type_phone_btn">{{'login.signin' | translate }}</span>
+  </div>
+  <img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+
+  <!--<p>Form dirty: {{loginForm.controls.login.dirty}}</p>
+  <p>Form touched: {{loginForm.controls.login.touched}}</p>
+  <p>Form pristine: {{loginForm.controls.login.pristine}}</p>-->
+  <!--<p>Form login errors: {{ loginForm.controls.login.errors | json }}</p>
+  <p>Form password errors: {{ loginForm.controls.password.errors | json }}</p>
+  <p>Form value: {{ loginForm.value | json }}</p>
+  <p>Form status: {{ loginForm.status | json }}</p>-->
+<!--
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text"  />
+    <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+      <div *ngIf="f.username.errors.required">Username is required</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password"  />
+    <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+      <div *ngIf="f.password.errors.required">Password is required</div>
+    </div>
+  </div>
+  <div class="form-group">
+    <button  class="btn btn-primary">Login</button>
+    <a [routerLink]="['/register']" class="btn btn-link">Register</a>
+  </div>-->
+</form>

@@ -1,0 +1,36 @@
+.uma_auth_type {
+  display: inline-block; width: 60px; cursor: pointer; color: #8E97A7;
+}
+
+.uma_auth_type:not(.phone) {
+  margin-left: 50px;
+}
+
+.uma_auth_type img, .uma_auth_type div {
+  width: 60px; display: block; margin: 0 0 8px 0; font-weight: 700;
+}
+
+.uma_auth_type.phone img {
+  content:url("/assets/images/login/uma_ic_phone_off.svg");
+}
+
+.uma_auth_type.qr img {
+  content:url("/assets/images/login/uma_ic_qr_off.svg");
+}
+
+.uma_auth_type.phone:hover img {
+  content:url("/assets/images/login/uma_ic_phone_on.svg");
+}
+
+.uma_auth_type.qr:hover img {
+  content:url("/assets/images/login/uma_ic_qr_on.svg");
+}
+
+.uma_auth_type > div {
+  color: #8E97A7;
+  text-transform: uppercase;
+}
+
+.uma_auth_type:hover > div {
+  color: #1F3057;
+}

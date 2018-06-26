@@ -4,15 +4,13 @@
 
 export const environment = {
   production: false,
-  front_url: 'http://ng.tis-frontend',
-  api_url: 'http://128.199.60.22:9090',
-  x_api_version: 1,
-  x_hrc_app_key: 'e34ab8cb0c62481a1a0a0aa63a8fa344',
+  url_front: 'http://ng.tis-frontend',
 
   languages: [
-    {id: 'ru', title: 'Русский', wysiwyg_code: 'ru'},
-    {id: 'en', title: 'English', wysiwyg_code: 'en_GB'},
-  ]
+    {code: 'ru', title: 'Русский'},
+    {code: 'en', title: 'English'},
+  ],
+  language_default_code: 'ru'
 };
 
 /*

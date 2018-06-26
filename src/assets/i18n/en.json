@@ -1,0 +1,22 @@
+{
+  "template": {
+    "form": {
+      "error": {
+        "required": "This field can not be empty.",
+        "min_length_01": "The minimum length of this field must be 1 character.",
+        "min_length_02": "The minimum length of this field must be 2 characters.",
+        "min_length_03": "The minimum length of this field must be 3 characters.",
+        "min_length_04": "The minimum length of this field must be 4 characters.",
+        "min_length_05": "The minimum length of this field must be 5 characters.",
+        "user_not_found": "The login and / or the password are not correct.",
+        "default": "Error. Something went wrong."
+      }
+    }
+  },
+  "login": {
+    "form": "Signin by username",
+    "username": "Username",
+    "password": "Password",
+    "signin": "signin"
+  }
+}

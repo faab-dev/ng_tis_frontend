@@ -1,0 +1,198 @@
+@font-face {
+  font-family: HelveticaNeueCyr-Medium;
+  src: url('/assets/fonts/HelveticaNeueCyr-Medium.otf') format('truetype');
+}
+@font-face {
+  font-family: HelveticaNeueCyr-Light;
+  src: url("/assets/fonts/HelveticaNeueCyr-Light.otf") format('truetype');
+}
+@font-face {
+  font-family: HelveticaNeueCyr-UltraLight;
+  src: url('/assets/fonts/HelveticaNeueCyr-UltraLight.otf') format('truetype');
+  font-weight: normal;
+}
+
+.uma_container_main, uma_lang_switcher {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #333;
+  background-color: #fff;
+}
+
+/* container */
+.uma_container_main {
+  height: 100%; margin: 0 auto; padding: 0;
+}
+
+.uma_container_main > div {
+  padding-top: 20px !important; position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; max-height: 500px;
+}
+
+.uma_login_group {
+  display: block; margin-left: auto; margin-right: auto; position: relative; text-align: center; width: 340px;
+}
+
+.uma_login_group.uma_qr {
+  width: 400px;
+}
+
+.uma_login_group.uma_qr .uma_type_auth_qr_btn {
+  margin: 0 40px;
+}
+
+.uma_login_group > img {
+  width: 150px; padding-bottom: 30px; margin-top: -20%;
+}
+
+/* login link */
+.uma_login_link {
+  position: absolute; right: 25%; top: 3%; margin-left: 20px; color: #8E97A7; cursor: pointer; font-size: 1.2em;
+}
+
+/* lang switcher */
+.uma_lang_switcher {
+  position: absolute; right: 20%; top: 3%;
+}
+
+.uma_lang_switcher .uma_lang {
+  display: inline-block; margin-left: 20px; color: #8E97A7; cursor: pointer; font-size: 1.2em;
+}
+
+.uma_lang_switcher .uma_lang.uma_active_lang {
+  color: #1F3057; cursor: default;
+}
+
+/* back btn */
+.uma_back_btn {
+  position: absolute; left: 20%; top: 3%;
+}
+
+.uma_back_btn a, .uma_back_btn a:visited, .uma_back_btn a:link {
+  color: #8E97A7; cursor: pointer; font-size: 1.3em; text-decoration: none;
+}
+
+.uma_back_btn a:hover, .uma_back_btn a:active {
+  color: #1F3057; text-decoration: none;
+}
+
+.uma_timer {
+  text-transform: lowercase;
+}
+
+
+/* auth type */
+.uma_auth_conainer h1 {
+  font-family: 'HelveticaNeueCyr-UltraLight';
+  font-size: 45px;
+  font-weight: normal;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+
+.uma_auth_conainer > div {
+  padding: 0 20px;
+}
+
+.uma_auth_conainer > div {
+  padding: 0 20px;
+}
+
+
+
+
+.uma_err_common_description {
+  margin-bottom: 30px;
+}
+
+
+.modalMessage {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /*outline: 10px red solid;*/
+  width: 250px;
+  padding: 50px;
+}
+
+.modal-guts {
+
+  /* other stuff we already covered */
+
+  /* cover the modal */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  /* spacing as needed */
+  padding: 20px 50px 20px 20px;
+
+  /* let it scroll */
+  overflow: auto;
+  background-color: #fff;
+  border: 3px #BBC0CA solid;
+  border-radius: 5px;
+
+
+}
+
+
+.blur {
+  background:rgba(0,0,0,0.75);
+}
+
+/* Outer */
+.popup {
+  width:100%;
+  height:100%;
+  display:none;
+  position:fixed;
+  top:0px;
+  left:0px;
+  background:rgba(0,0,0,0.75);
+  z-index: 100;
+}
+/* Inner */
+.popup-inner {
+  max-width:700px;
+  width:90%;
+  padding:40px;
+  position:absolute;
+  top:50%;
+  left:50%;
+  -webkit-transform:translate(-50%, -50%);
+  transform:translate(-50%, -50%);
+  box-shadow:0px 2px 6px rgba(0,0,0,1);
+  border-radius:3px;
+  background:#fff;
+}
+/* Close Button */
+.popup-close {
+  width:30px;
+  height:30px;
+  padding-top:4px;
+  display:inline-block;
+  position:absolute;
+  top:0px;
+  right:0px;
+  transition:ease 0.25s all;
+  -webkit-transform:translate(50%, -50%);
+  transform:translate(50%, -50%);
+  border-radius:1000px;
+  background:rgba(0,0,0,0.8);
+  font-family:Arial, Sans-Serif;
+  font-size:20px;
+  text-align:center;
+  line-height:100%;
+  color:#fff;
+}
+.popup-close:hover {
+  -webkit-transform:translate(50%, -50%) rotate(180deg);
+  transform:translate(50%, -50%) rotate(180deg);
+  background:rgba(0,0,0,1);
+  text-decoration:none;
+}
+

@@ -1,3 +1,15 @@
-<p>
-  login works!
-</p>
+<div class="uma_container_main">
+  <div>
+    <div class="uma_login_group">
+      <img src="assets/images/logo_login.png">
+      <div class="uma_auth_conainer">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="uma_lang_switcher">
+  <div class="uma_lang" *ngFor="let language of languages" [ngClass]="{ 'uma_active_lang': language.code === language_active }" (click)="onClickLanguage(language.code)">
+    {{ language.code | uppercase }}
+  </div>
+</div>
