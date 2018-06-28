@@ -2,9 +2,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';  // <-- #1 import module
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-// import { NgxIntlTelInputModule } from 'ngx-intl-tel-input';
-import * as $ from 'jquery';
-import { NgxPhoneSelectModule } from 'ngx-phone-select';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { AlertService } from '../shared/service';
@@ -26,8 +23,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    // NgxIntlTelInputModule,
-    NgxPhoneSelectModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

@@ -67,6 +67,9 @@
 .uma_back_btn {
   position: absolute; left: 20%; top: 3%;
 }
+.uma_back_btn.behind {
+  display: none;
+}
 
 .uma_back_btn a, .uma_back_btn a:visited, .uma_back_btn a:link {
   color: #8E97A7; cursor: pointer; font-size: 1.3em; text-decoration: none;

@@ -2,21 +2,33 @@
   "template": {
     "form": {
       "error": {
-        "required": "This field can not be empty.",
-        "min_length_01": "The minimum length of this field must be 1 character.",
-        "min_length_02": "The minimum length of this field must be 2 characters.",
-        "min_length_03": "The minimum length of this field must be 3 characters.",
-        "min_length_04": "The minimum length of this field must be 4 characters.",
-        "min_length_05": "The minimum length of this field must be 5 characters.",
-        "user_not_found": "The login and / or the password are not correct.",
-        "default": "Error. Something went wrong."
+        "required":"This field can not be empty.",
+        "min_length_01":"The minimum length of this field must be 1 character.",
+        "min_length_02":"The minimum length of this field must be 2 characters.",
+        "min_length_03":"The minimum length of this field must be 3 characters.",
+        "min_length_04":"The minimum length of this field must be 4 characters.",
+        "min_length_05":"The minimum length of this field must be 5 characters.",
+        "user_not_found":"The login and / or the password are not correct.",
+        "default":"Error. Something went wrong.",
+        "libphonenumber_country_are_not_selected":"The country code is not selected.",
+        "libphonenumber_country_is_not_valid":"Incorrect country code.",
+        "libphonenumber_phonenumber_is_not_mobile":"The phone number is not a mobile number.",
+        "libphonenumber_phonenumber_is_not_valid":"Phone number is incorrect."
       }
     }
   },
   "login": {
-    "form": "Signin by username",
-    "username": "Username",
-    "password": "Password",
-    "signin": "signin"
+    "choose":"Select an authorization method",
+    "phone_title":"Phone",
+    "qr_title":"QR-code",
+    "form":"Signin by username",
+    "phone":"Signin by phone number",
+    "qr":"Signin by QR code",
+    "username":"Username",
+    "password":"Password",
+    "signin":"Signin",
+    "accept":"Ассept",
+    "submit_disabled":"Fill in all the fields of the form for further authorization.",
+    "back_button":"Back"
   }
 }

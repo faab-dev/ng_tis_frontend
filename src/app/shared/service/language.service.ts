@@ -15,14 +15,11 @@ export class LanguageService {
     {code: 'en', title: 'English'},
   ];
   current_code: string = 'ru';
-  private locationService: Location;
   constructor(
     private translate: TranslateService,
-    locationService: Location,
     private activatedRoute: ActivatedRoute,
     private router: Router
   ) {
-    this.locationService = locationService;
     const path = this.activatedRoute.queryParams.subscribe(params => {
       console.log(params); // {order: "popular"}
 
@@ -34,9 +31,6 @@ export class LanguageService {
         this.setLanguage( code );
 
       }
-
-
-      // const user = route.data.map(d => d.user);
     });
   }
 

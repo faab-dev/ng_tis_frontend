@@ -24,9 +24,8 @@
     "@ngx-translate/core": "^10.0.2",
     "@ngx-translate/http-loader": "^3.0.1",
     "core-js": "^2.5.4",
+    "libphonenumber-js": "^1.2.15",
     "ngx-bootstrap": "^3.0.1",
-    "ngx-intl-tel-input": "^1.0.6",
-    "ngx-phone-select": "^1.0.4",
     "rxjs": "^6.0.0",
     "zone.js": "^0.8.26"
   },

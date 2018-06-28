@@ -1,11 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { LanguageService } from '../../shared/service';
-
-import { AlertService, AuthService } from '../../shared/service';
+import {AuthService, DataService, LanguageService} from '../../shared/service';
 
 @Component({
   selector: 'app-login-form',
@@ -18,27 +16,23 @@ export class LoginFormComponent implements OnInit {
   submitted = false;
   returnUrl: string;
   formErrors: object = {};
-
-  /*login: string;
-  password: string;
-*/
   constructor(
     private fb: FormBuilder,
-    private route: ActivatedRoute,
+    private activatedRoute: ActivatedRoute,
     private router: Router,
     // private authenticationService: AuthenticationService,
     private authService: AuthService,
-    private alertService: AlertService,
     private languageService: LanguageService,
-    public translate: TranslateService
+    public translate: TranslateService,
+    private ds: DataService
   ) {}
 
   ngOnInit() {
-    console.log('LoginFormComponent ngOnInit');
-    const lang = this.languageService.getCurrentLanguage();
-    console.log('lang');
-    console.log(lang);
     this.translate.use(this.languageService.getCurrentLanguage());
+    let self = this;
+    setTimeout(function () {
+      self.ds.sendData({show_back_button: true});
+    }, 200);
     /*this.loginForm = this.fb.group({
       login: new FormControl(this.login, [Validators.required,  Validators.minLength(2)]),
       password: new FormControl(this.password, [Validators.required,  Validators.minLength(2)]),
@@ -48,13 +42,13 @@ export class LoginFormComponent implements OnInit {
     // reset login status
     // this.authenticationService.logout();
 
-    // get return url from route parameters or default to '/'
+    // get return url from activatedRoute parameters or default to '/'
 
     this.loginForm = this.fb.group({
       login: ['', [Validators.required,  Validators.minLength(2)] ],
       password: ['', [Validators.required,  Validators.minLength(2)] ]
     });
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.activatedRoute.snapshot.queryParams['returnUrl'] || '/';
   }
 
   onClickAcceptForm(): void {
@@ -143,7 +137,7 @@ export class LoginFormComponent implements OnInit {
   }
 
   helperGetErrors(field: string): object {
-    let error = this.loginForm.controls[field].errors;
+    const error = this.loginForm.controls[field].errors;
     // debugger;
     return (this.loginForm.controls[field].errors);
   }

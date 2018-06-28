@@ -34,3 +34,13 @@
 .uma_auth_type:hover > div {
   color: #1F3057;
 }
+
+h1 {
+  font-family: 'HelveticaNeueCyr-UltraLight';
+  font-size: 45px;
+  color: #333;
+  background-color: #fff;
+  font-weight: normal;
+  margin-bottom: 60px;
+  margin-top: 30px;
+}

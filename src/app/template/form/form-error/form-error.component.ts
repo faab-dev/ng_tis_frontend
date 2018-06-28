@@ -66,7 +66,16 @@ export class FormErrorComponent implements OnInit, OnChanges {
   private actionGetMessagesByErrorProperty(error_key: string, error_value: boolean|string|number|object ): string {
     // debugger;
     if (
-      ['required', 'user_not_found', 'default'].indexOf(error_key) >= 0 && error_value === true
+      [
+        'required',
+        'user_not_found',
+        'default',
+        'libphonenumber_country_are_not_selected',
+        'libphonenumber_country_is_not_valid',
+        'libphonenumber_phonenumber_is_not_mobile',
+        'libphonenumber_phonenumber_is_not_valid'
+      ].indexOf(error_key) >= 0
+      && error_value === true
     ) {
       return error_key;
     }

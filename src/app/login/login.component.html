@@ -13,3 +13,6 @@
     {{ language.code | uppercase }}
   </div>
 </div>
+<div class="uma_back_btn" [ngClass]="{'behind': !show_back_button}">
+  <a href (click)="$event.preventDefault();onClickBackButton()">{{'login.back_button'|translate}}</a>
+</div>
