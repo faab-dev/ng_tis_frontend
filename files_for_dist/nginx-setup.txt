@@ -1,10 +1,10 @@
 server {
-    listen 80;
+    listen 127.0.0.1:8080;
 
     root /home/fedorov/Sites/ng.tis-frontned/www/dist/tis-frontend;
     index index.php index.html index.htm;
 
-    server_name ng.tis-frontend;
+    server_name 127.0.0.1:8080;
 
     error_log /home/fedorov/Sites/logs/ng.tis-frontend.error.log error;
     access_log /home/fedorov/Sites/logs/ng.tis-frontend.access.log combined;
@@ -27,17 +27,13 @@ server {
 
     }
 
-    #location /api/ {
-    #	rewrite ^/api/([\w-]+)$ /api.php?controller=$1;
-    #}
-
-    location  /api/ {
-        # proxy_pass http://testing.com/userhistory;
-        proxy_pass /api.php
+    location  /api/* {
+        proxy_pass http://ng.tis-frontend/api.php;
         proxy_redirect off;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
     }
+
 
 }
