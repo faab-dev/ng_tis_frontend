@@ -1,32 +1,37 @@
 import { Injectable } from '@angular/core';
-
-import { Observable, of } from 'rxjs';
-import { tap, delay, catchError, map, retry } from 'rxjs/operators';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { Location } from '@angular/common';
+import { Observable, of, ObservableInput, throwError } from 'rxjs';
+import { tap, delay, catchError, map, retry, retryWhen, scan, flatMap, first } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
 import { CookieService } from '../service/cookie.service';
 import { User } from './../class/user';
-import { InitData } from '../interface/init-data';
-import { Uapp } from '../interface/uapp';
-import { SignInRequest } from '../interface/sign-in-request';
-import { SignInResponse } from '../interface/sign-in-response';
-import {LoginFormComponent} from '../../login/login-form/login-form.component';
+import { AuthPhone, Operator } from "../class";
+import { LoginErrors } from "../enum";
+import { FrontRequestBody, FrontRequestSignin, FrontResponseInitData, FrontResponseSignin, HttpVoidResponse, Uapp } from "../interface";
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private url_front: string = '';
+  private url_front: string = '/api.php';
   private url_init_data: string = 'init-data';
   private url_uapp = 'user/app';
-  private url_sign_in = 'signinlogin';
+  private url_signin_form = 'signinlogin';
+  private url_signin_phone = 'user/phone/signin';
+  private url_token_refresh = 'refresh-token';
   private url_get_user: string = 'user';
-  private url: string;
+  private url_get_otp: string = 'user/phone/request/otp';
   first_load: boolean = true;
   is_logged_in: boolean = false;
   when_checked: number = 0;
   redirect_url: string;
+  path_logged_out:string = 'login/form';
+  path_not_accessible:string = 'not-accessible';
+  path_installer:string = 'installer';
+  path_tis_admin:string = 'tis-admin';
+  path_default;
   // init data
   url_ars_be: string = '';
   x_oe_app_key: string = '';
@@ -34,6 +39,13 @@ export class AuthService {
   x_oe_uapp_key: string = '';
   user_id: string = '';
   access_token: string = '';
+  // user data
+  user_is_installer: boolean = false;
+  user_is_tis_admin: boolean = false;
+  user_name: string;
+  user_auth_phone: AuthPhone;
+  current_operator: Operator;
+  available_operators: Operator[];
 
 
 
@@ -44,43 +56,34 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private cookieService: CookieService
-  ){
-    this.url = 'url';
-    if ( environment.url_front !== '' ) {
-      this.url_front = environment.url_front;
-    }
-  }
+    private cookieService: CookieService,
+    private router: Router,
+    private location: Location
+  ){}
 
-  /** GET user by id. Will 404 if id not found */
-  getUser(id: string, access_token:string): Observable<User> {
 
-    const url = `${this.url + '/' + this.url_get_user}/${id}`,
-      httpOptions = {
+
+  getOtp(number: string): Observable<HttpVoidResponse>{
+    const url = this.url_ars_be + '/' + this.url_get_otp + '/' + number,
+      http_options = {
         headers: new HttpHeaders({
           'Content-Type':  'application/json',
           'X-OE-APP-KEY': this.x_oe_app_key,
-          'X-OE-UAPP-KEY': this.x_oe_uapp_key,
-          'Authorization': this.access_token
+          'X-OE-UAPP-KEY': this.x_oe_uapp_key
         })
       };
-    return this.http.get<User>(url, httpOptions).pipe(
-      tap(_ => console.log(`fetched user id=${id}`)),
-      catchError(this.handleError<User>(`getUser id=${id}`))
-    );
-
+    return this.http.get(url, http_options)
+      .pipe(map( () => {
+        return {
+          error: false
+        } as HttpVoidResponse;
+      }));
   }
 
-  getInitData(): Observable<InitData> {
-    return this.http.get<InitData>(this.url_front + '/' + this.url_init_data).pipe(
-      tap(_ => console.log('get init data')),
-      catchError(this.handleError<InitData>('error by get init data'))
-    );
-  }
-
-  getUserWithBrowserData() {
+  getUserWithBrowserData(): Observable<HttpVoidResponse>{
+    console.log('getUserWithBrowserData');
     const url = this.url_ars_be + '/' + this.url_get_user + '/' + this.user_id,
-      httpOptions = {
+      http_options = {
         headers: new HttpHeaders({
           'Content-Type':  'application/json',
           'X-OE-APP-KEY': this.x_oe_app_key,
@@ -88,8 +91,16 @@ export class AuthService {
           'Authorization': this.access_token
         })
       };
-    return this.http.get(url, httpOptions)
-      .pipe(map(user => {
+    return this.http.get(url, http_options)
+      .pipe(
+        /*retryWhen(
+          this._retryWhen()
+        ),*/
+        map( (user: User) => {
+          console.log('getUserWithBrowserData map');
+        console.log('user');
+        console.log(user);
+
         if ( !user ) {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
           // localStorage.setItem('currentUser', JSON.stringify(user));
@@ -98,13 +109,55 @@ export class AuthService {
             error: true
           };
         }
-        console.log("user");
-        console.log(user);
-        debugger;
-        return {
-          error: false
-        };
-      }));
+
+        this.user_name = (user.name) ? user.name : (user.login) ? user.login : '';
+        let data_length = user.authPhones.length;
+        for ( let i = 0; i < data_length; i++ ){
+            const auth_phone = user.authPhones[i];
+          // @TODO develop class auth phone (not finished)
+            if( !auth_phone.approved ){
+              continue;
+            }
+            this.user_auth_phone = auth_phone;
+            break;
+        }
+
+        data_length = user.roles.length;
+        for ( let i = 0; i < data_length; i++ ){
+          const role = user.roles[i];
+          if( !role.name ){
+            continue;
+          }
+          if( role.name === 'INSTALLER' ){
+            this.user_is_installer = true;
+            continue;
+          }
+          if( role.name === 'TIS_ADMIN' ){
+            this.user_is_installer = true;
+            this.user_is_tis_admin = true;
+            break;
+          }
+        }
+
+        this.available_operators = user.availableOperators;
+
+        if( this.available_operators.length === 0 ){
+          throw new Error(LoginErrors.USER_HAS_NOT_OPERATOR);
+        }
+
+        if( !this.user_is_installer && !this.user_is_tis_admin ){
+          throw new Error(LoginErrors.USER_HAS_NOT_PERMISSIONS);
+        }
+
+        this.is_logged_in = true;
+        this.path_default = this.path_installer;
+        if( this.user_is_tis_admin ){
+          this.path_default = this.path_tis_admin;
+        }
+        return {error: false} as HttpVoidResponse;
+      })
+
+      );
       /*.pipe(
       tap(_ => console.log('fetched user id=' + this.user_id)),
       catchError(this.handleError('getUser id=' + this.user_id))
@@ -112,23 +165,49 @@ export class AuthService {
   }
   /** POST: add an app to the database */
   postUapp (uapp): Observable<Uapp> {
-    const httpOptions = {
+    const http_options = {
       headers: new HttpHeaders({
         'Content-Type':  'application/json',
         'X-OE-APP-KEY': this.x_oe_app_key
       })
     };
-    return this.http.post<Uapp>(this.url_ars_be + '/' + this.url_uapp, uapp, httpOptions)
+    return this.http.post<Uapp>(this.url_ars_be + '/' + this.url_uapp, uapp, http_options)
       .pipe(
         catchError(this.handleError('postUapp', uapp))
       );
   }
-  postSignIn (sign_in_request: SignInRequest) {
-    console.log('sign_in_request');
-    console.log(sign_in_request);
-    return this.http.post(this.url_front + '/' + this.url_sign_in, sign_in_request)
-      .pipe(retry(3), map(
-        (response: SignInResponse) => {
+  postFrontInitData(): Observable<HttpVoidResponse> {
+    console.log('postFrontInitData');
+    const body = {controller: 'init-data', data: {}} as FrontRequestBody;
+    return this.http.post<HttpVoidResponse>(this.url_front, body).pipe(
+      retryWhen(
+        this._retryWhen()
+      ),
+      map( (init_data: FrontResponseInitData) => {
+        console.log('postFrontInitData map');
+        if( !init_data || !init_data.url_ars_be || !init_data.x_oe_app_key ){
+          return {
+            error: true
+          } as HttpVoidResponse;
+        }
+        this.url_ars_be = init_data.url_ars_be;
+        this.x_oe_app_key = init_data.x_oe_app_key;
+        return {
+          error: false
+        } as HttpVoidResponse;
+      })
+    );
+  }
+  postFrontSignInForm (sign_in_request: FrontRequestSignin): Observable<HttpVoidResponse>{
+    console.log('postFrontSignInForm');
+    const body = {controller: 'signin-form', data: sign_in_request} as FrontRequestBody;
+    return this.http.post<HttpVoidResponse>(this.url_front, body)
+      .pipe(
+        retryWhen(
+          this._retryWhen()
+        ),
+        map(
+        (response: FrontResponseSignin) => {
           if ( !response || !response.access_token || !response.user_id ) {
             // store user details and jwt token in local storage to keep user logged in between page refreshes
             // localStorage.setItem('currentUser', JSON.stringify(user));
@@ -144,11 +223,71 @@ export class AuthService {
             user_id: this.user_id,
             access_token: this.access_token
           });
+          return {error: false} as HttpVoidResponse;
         }
       ));
       /*.pipe(
         catchError(this.handleError('postUapp', sign_in_request))
       );*/
+  }
+  postFrontSignInPhone (sign_in_request: FrontRequestSignin): Observable<HttpVoidResponse>{
+    console.log('postFrontSignInPhone');
+    const body = {controller: 'signin-phone', data: sign_in_request} as FrontRequestBody;
+    return this.http.post<HttpVoidResponse>(this.url_front, body)
+      .pipe(retry(3), map(
+        (response: FrontResponseSignin) => {
+          console.log('postFrontSignInPhone map');
+          this.user_id = response.user_id;
+          this.access_token = response.access_token;
+          this.cookieService.setCookie('token', {
+            x_oe_uapp_key: this.x_oe_uapp_key,
+            user_id: this.user_id,
+            access_token: this.access_token
+          });
+          return {error: false} as HttpVoidResponse;
+        }
+      ));
+    /*.pipe(
+      catchError(this.handleError('postUapp', sign_in_request))
+    );*/
+  }
+  postFrontTokenRefresh (): Observable<string>{
+    console.log('postFrontTokenRefresh');
+    const body = {
+      controller: 'refresh-token',
+      data: {
+        user_id: this.user_id,
+        access_token: this.access_token,
+        x_oe_uapp_key: this.x_oe_uapp_key
+      }
+    } as FrontRequestBody;
+    return this.http.post<string>(this.url_front, body)
+      .pipe(
+        map( (response: FrontResponseSignin) => {
+          console.log('postFrontTokenRefresh MAP');
+          this.user_id = response.user_id;
+          this.access_token = response.access_token;
+          this.cookieService.setCookie('token', {
+            x_oe_uapp_key: this.x_oe_uapp_key,
+            user_id: this.user_id,
+            access_token: this.access_token
+          });
+          console.log('this.access_token');
+          console.log(this.access_token);
+          return this.access_token;
+        } )
+        // This functionality is implemented in RefreshTokenInterceptor
+        /*,
+        catchError(
+          (error) => {
+            debugger;
+            console.log('postFrontTokenRefresh ERROR');
+            this.logout();
+            this.router.navigate([ '/' + this.path_logged_out ]);
+            return error;
+          }
+        )*/
+      );
   }
 
   actionLogin(): Observable<boolean> {
@@ -156,6 +295,14 @@ export class AuthService {
       delay(1000),
       tap(val => this.is_logged_in = true)
     );
+  }
+
+  actionLogout(): void {
+    this.is_logged_in = false;
+    this.path_default = this.path_logged_out;
+    this.cookieService.setCookie('token', {
+      x_oe_uapp_key: this.x_oe_uapp_key
+    });
   }
 
   setAuthData(user, auth): boolean{
@@ -199,9 +346,39 @@ export class AuthService {
   }
 
   logout(): void {
-    this.resetAuthData();
-    window.localStorage.removeItem('token');
+    this.user_id = '';
+    this.roles = [];
+    this.access = [];
+    this.login = '';
+    this.type = '';
+    this.access_token = '';
     this.is_logged_in = false;
+
+    this.cookieService.setCookie('token', {
+      x_oe_uapp_key: this.x_oe_uapp_key
+    });
+
+    this.router.navigate(['/' + this.path_logged_out]);
+  }
+
+  private _retryWhen(){
+    console.log('_retryWhen');
+    return scan((error_count, err: HttpErrorResponse) => {
+
+        // [500, 502, 503, 504].indexOf(err.status) < 0
+        if ( err.status < 500 ){
+          throwError(err);
+        }
+        if( error_count < 10 ){
+          delay(1000);
+          return error_count +1;
+        }
+
+        throw new Error(LoginErrors.HTTP_SERVER_IS_NOT_AVAILABLE);
+
+      }
+
+      , 0)
   }
 
   private handleError<T> (operation = 'operation', result?: T) {
@@ -245,4 +422,9 @@ export class AuthService {
     }
     return os + M[0] + ' ' + M[1] + lang;
   }
+
+  _samePath(): string {
+    return this.location.path().split('?')[0].split('#')[0];
+  }
+
 }

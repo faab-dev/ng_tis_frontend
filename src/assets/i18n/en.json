@@ -2,18 +2,21 @@
   "template": {
     "form": {
       "error": {
-        "required":"This field can not be empty.",
-        "min_length_01":"The minimum length of this field must be 1 character.",
-        "min_length_02":"The minimum length of this field must be 2 characters.",
-        "min_length_03":"The minimum length of this field must be 3 characters.",
-        "min_length_04":"The minimum length of this field must be 4 characters.",
-        "min_length_05":"The minimum length of this field must be 5 characters.",
-        "user_not_found":"The login and / or the password are not correct.",
-        "default":"Error. Something went wrong.",
-        "libphonenumber_country_are_not_selected":"The country code is not selected.",
-        "libphonenumber_country_is_not_valid":"Incorrect country code.",
-        "libphonenumber_phonenumber_is_not_mobile":"The phone number is not a mobile number.",
-        "libphonenumber_phonenumber_is_not_valid":"Phone number is incorrect."
+        "REQUIRED":"This field can not be empty.",
+        "MIN_LENGTH_01":"The minimum length of this field must be 1 character.",
+        "MIN_LENGTH_02":"The minimum length of this field must be 2 characters.",
+        "MIN_LENGTH_03":"The minimum length of this field must be 3 characters.",
+        "MIN_LENGTH_04":"The minimum length of this field must be 4 characters.",
+        "MIN_LENGTH_05":"The minimum length of this field must be 5 characters.",
+        "USER_NOT_FOUND":"The login and / or the password are not correct.",
+        "USER_HAS_NOT_OPERATOR":"The user does not have an operator.",
+        "USER_HAS_NOT_PERMISSIONS":"The user has insufficient rights.",
+        "DEFAULT":"Error. Something went wrong.",
+        "LIBPHONENUMBER_COUNTRY_ARE_NOT_SELECTED":"The country code is not selected.",
+        "LIBPHONENUMBER_COUNTRY_IS_NOT_VALID":"Incorrect country code.",
+        "LIBPHONENUMBER_PHONENUMBER_IS_NOT_MOBILE":"The phone number is not a mobile number.",
+        "LIBPHONENUMBER_PHONENUMBER_IS_NOT_VALID":"Phone number is incorrect.",
+        "HTTP_SERVER_IS_NOT_AVAILABLE": "Server is not available."
       }
     }
   },
@@ -29,6 +32,12 @@
     "signin":"Signin",
     "accept":"Ассept",
     "submit_disabled":"Fill in all the fields of the form for further authorization.",
-    "back_button":"Back"
+    "back_button":"Back",
+    "h": "h.",
+    "m": "m.",
+    "s": "s.",
+    "HTTP_PROCESSING": "Processing request",
+    "WS_OPENING": "Establishing a connection to the server",
+    "WS_PROCESSING": "Waiting for a response from the server"
   }
 }

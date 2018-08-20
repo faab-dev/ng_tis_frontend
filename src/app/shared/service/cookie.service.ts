@@ -38,7 +38,7 @@ export class CookieService {
       d.setTime(d.getTime() + expireDays * 24 * 60 * 60 * 1000);
       expires = 'expires=' + d.toUTCString();
     }
-    document.cookie = name + '=' + value + '; ' + expires + (path.length > 0 ? '; path=' + path : '');
+    document.cookie = name + '=' + value + '; ' + expires + '; path=/;';
   }
   private helperCookieRead(cookie_name: string): string {
     const cookie_name_eq = cookie_name + '=',

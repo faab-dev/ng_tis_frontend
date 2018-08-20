@@ -93,9 +93,11 @@ h1 {
   font-family: "HelveticaNeueCyr-Medium";
   width: 100%;
   margin-top: 30px;
-  text-transform: uppercase;
 }
 
+.uma_timer {
+  margin-left: 10px;
+}
 .uma_type_auth_phone_btn > div:hover, .uma_type_auth_phone_btn > div:visited, .uma_type_auth_phone_btn > div:link, .uma_type_auth_phone_btn > div:focus,
 .uma_type_auth_err_btn > div:hover, .uma_type_auth_err_btn > div:visited, .uma_type_auth_err_btn > div:link, .uma_type_auth_err_btn > div:focus {
   text-decoration: none;

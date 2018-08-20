@@ -1,4 +1,6 @@
+import {Lang} from "../enum";
+
 export interface Language {
-  code: string;
+  code: Lang;
   title: string;
 }

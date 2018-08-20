@@ -1,6 +1,8 @@
 import { Component, forwardRef, Input, HostListener } from '@angular/core';
 import { ControlValueAccessor, Validator, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl, ValidationErrors } from '@angular/forms';
 import { formatNumber, isValidNumber, getNumberType, CountryCode } from 'libphonenumber-js';
+import {LoginErrors, PhoneNumberErrors} from "../../../shared/enum/errors.enum";
+import {P} from "@angular/core/src/render3";
 
 export class Country {
   name: string;
@@ -1421,19 +1423,22 @@ export class FormPhoneNumberComponent implements ControlValueAccessor, Validator
 
   validate(c: FormControl) {
     const selected_country = this.selected_country;
+    let err = {} as ValidationErrors;
     if ( !selected_country ) {
-      return { libphonenumber_country_are_not_selected: true } as ValidationErrors;
+      err[PhoneNumberErrors.LIBPHONENUMBER_COUNTRY_ARE_NOT_SELECTED] = true;
+      return err;
     }
     if ( !selected_country.dialCode || !selected_country.countryCode ) {
-      return { libphonenumber_country_is_not_valid: true } as ValidationErrors;
+      err[PhoneNumberErrors.LIBPHONENUMBER_COUNTRY_IS_NOT_VALID] = true;
+      return err;
     }
     const phone_number = this.phone_number;
     if ( phone_number === '' ) {
-      return { required: true } as ValidationErrors;
+      err[LoginErrors.REQUIRED] = true;
+      return err;
     }
 
     let error_flag = false;
-    const error_object: object = {};
     // const phone_number = this.phone_number;
     console.log('selected_country.countryCode');
     console.log(selected_country.countryCode);
@@ -1442,14 +1447,14 @@ export class FormPhoneNumberComponent implements ControlValueAccessor, Validator
 
     if ( getNumberType(phone_number, selected_country.countryCode ) !== 'MOBILE' ) {
       error_flag = true;
-      error_object['libphonenumber_phonenumber_is_not_mobile'] = true;
+      err[PhoneNumberErrors.LIBPHONENUMBER_PHONENUMBER_IS_NOT_MOBILE] = true;
     }
     if ( !isValidNumber(phone_number, selected_country.countryCode ) ) {
       error_flag = true;
-      error_object['libphonenumber_phonenumber_is_not_valid'] = true;
+      err[PhoneNumberErrors.LIBPHONENUMBER_PHONENUMBER_IS_NOT_VALID] = true;
     }
     if ( error_flag ) {
-      return error_object as ValidationErrors;
+      return err;
     }
 
     return null;

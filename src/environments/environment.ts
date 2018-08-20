@@ -4,7 +4,6 @@
 
 export const environment = {
   production: false,
-  url_front: 'http://ng.tis-frontend',
 
   languages: [
     {code: 'ru', title: 'Русский'},

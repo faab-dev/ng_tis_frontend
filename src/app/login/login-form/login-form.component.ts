@@ -1,9 +1,11 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import {FormBuilder, FormGroup, Validators, FormControl, ValidationErrors} from '@angular/forms';
 import { first } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import {AuthService, DataService, LanguageService} from '../../shared/service';
+import {ComponentStatus, LoginErrors} from "../../shared/enum";
+import {HttpVoidResponse, FrontRequestSignin} from "../../shared/interface";
 
 @Component({
   selector: 'app-login-form',
@@ -12,10 +14,10 @@ import {AuthService, DataService, LanguageService} from '../../shared/service';
 })
 export class LoginFormComponent implements OnInit {
   loginForm: FormGroup;
-  loading = false;
   submitted = false;
   returnUrl: string;
   formErrors: object = {};
+  private component_status: ComponentStatus;
   constructor(
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
@@ -28,21 +30,11 @@ export class LoginFormComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.component_status = ComponentStatus.INITIALIZED;
     this.translate.use(this.languageService.getCurrentLanguage());
-    let self = this;
-    setTimeout(function () {
-      self.ds.sendData({show_back_button: true});
+    setTimeout(() => {
+      this.ds.sendData({show_back_button: true});
     }, 200);
-    /*this.loginForm = this.fb.group({
-      login: new FormControl(this.login, [Validators.required,  Validators.minLength(2)]),
-      password: new FormControl(this.password, [Validators.required,  Validators.minLength(2)]),
-      // ['', Validators.required]
-    });*/
-
-    // reset login status
-    // this.authenticationService.logout();
-
-    // get return url from activatedRoute parameters or default to '/'
 
     this.loginForm = this.fb.group({
       login: ['', [Validators.required,  Validators.minLength(2)] ],
@@ -53,6 +45,8 @@ export class LoginFormComponent implements OnInit {
 
   onClickAcceptForm(): void {
     console.log('onClickAcceptForm');
+    console.log('this.loginForm.status');
+    console.log(this.loginForm.status);
     if ( this.loginForm.status === 'VALID' ){
       this.actionSignin();
     } else {
@@ -69,69 +63,89 @@ export class LoginFormComponent implements OnInit {
     return this.loginForm.controls;
   }
   onSubmit() {
-    if ( this.loginForm.status === 'VALID' ){
-      this.actionSignin();
-    }
+    this.actionSignin();
   }
   actionSignin(): void {
-    this.submitted = true;
-
-    // stop here if form is invalid
-    if (this.loginForm.invalid) {
+    if( this.isDisabled() ){
       return;
     }
 
-    this.loading = true;
-    this.authService.postSignIn(
+    this.component_status = ComponentStatus.HTTP_PROCESSING;
+    this.authService.postFrontSignInForm(
       {
         login: this.f.login.value,
         password: this.f.password.value,
         x_oe_uapp_key: this.authService.x_oe_uapp_key
-      }
+      } as FrontRequestSignin
   )
       .pipe(first())
       .subscribe(
-        sign_in_error => {
+        (http_void_response: HttpVoidResponse) => {
           this.formErrors = {};
-          if (  !sign_in_error || sign_in_error.error ) {
-            this.loading = false;
+          if (  !http_void_response || http_void_response.error ) {
+            this.component_status = ComponentStatus.INITIALIZED;
             return;
           }
           this.authService.getUserWithBrowserData()
             .pipe(first())
             .subscribe(
-              user => {
-                console.log('user');
-                console.log(user);
-                this.loading = false;
-                // this.router.navigate([this.returnUrl]);
+              (res: HttpVoidResponse) => {
+                if (  !res || res.error ) {
+                  this.component_status = ComponentStatus.INITIALIZED;
+                  return;
+                }
+                this.router.navigate(['/'+this.authService.path_default]);
+                this.component_status = ComponentStatus.INITIALIZED;
               },
               error => {
                 console.log('error');
                 console.log(error);
-                this.loading = false;
+                console.log(typeof error);
+                this.component_status = ComponentStatus.INITIALIZED;
+
+                if (Object.values(LoginErrors).includes(error.message)) {
+                  let err = {} as ValidationErrors;
+                  err[error.message] = true;
+                  this.formErrors = err;
+                }
+
+
               }
             );
         },
         error => {
-          console.log("http://77.244.218.222:8081/");
-          console.log(error);
+          this.component_status = ComponentStatus.INITIALIZED;
+          let err = {} as ValidationErrors;
+
+          if ( error.message && Object.values(LoginErrors).includes(error.message)) {
+            err[error.message] = true;
+            this.formErrors = err;
+            return;
+          }
+
           switch ( error.status ) {
             case 404:
-              this.formErrors = {'user_not_found': true};
+              err[LoginErrors.USER_NOT_FOUND] = true;
               break;
             default:
-              this.formErrors = {'default': true};
+              err[LoginErrors.DEFAULT] = true;
           }
-          this.loading = false;
+          this.formErrors = err;
         });
   }
-  /*createForm() {
-    this.loginForm = this.fb.group({
-      login: ['', [Validators.required,  Validators.minLength(2)] ],
-      password: ['', Validators.required, [Validators.required,  Validators.minLength(2)] ]
-    });
-  }*/
+
+  isDisabled(): boolean {
+    return (
+      this.loginForm.status !== 'VALID'
+      || [ComponentStatus.HTTP_PROCESSING].indexOf(this.component_status) >= 0
+    );
+  }
+  isLoading(): boolean {
+    return (
+      [ComponentStatus.HTTP_PROCESSING].indexOf(this.component_status) >= 0
+    );
+  }
+
   helperIsValideForm(field: string): boolean {
     return (this.loginForm.controls[field].errors && (this.loginForm.controls[field].dirty || this.loginForm.controls[field].touched));
   }

@@ -11,8 +11,8 @@
 
 <div class="uma_type_auth_phone_btn" (click)="onClickButtonAcceptPhone()" [ngClass]="{ 'disabled': isDisabled() }" [title]="getSubmitTitle() | translate">
   <div>
-    <span data-i18n-text="auth_type_phone_btn" >{{'login.accept' | translate }}</span>
-    <span class="uma_timer"></span>
+    <span>{{ getSubmitValue() | translate }}</span>
+    <span class="uma_timer">{{ button_timeout | formatMilliseconds }}</span>
   </div>
 </div>
 <div class="uma_type_auth_error uma_err"></div>

@@ -2,8 +2,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Language } from '../shared/interface/language';
 import { Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { LanguageService, DataService } from '../shared/service';
+import {LanguageService, DataService, AuthService} from '../shared/service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import {Lang} from "../shared/enum";
+import {Observable} from "rxjs/internal/Observable";
 
 @Component({
   selector: 'app-login',
@@ -13,7 +15,6 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 export class LoginComponent implements OnInit, OnDestroy {
   show_back_button: boolean = true;
   languages: Language[];
-  language_active: string;
   subscription: Subscription;
 
   constructor(
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private languageService: LanguageService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private ds: DataService
+    private ds: DataService,
+    private authService: AuthService
   ) {
     this.subscription = this.ds.getData().subscribe(
       x => {
@@ -34,7 +36,6 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.languages = this.languageService.getLanguages();
-    this.language_active = this.languageService.current_code;
   }
 
   ngOnDestroy() {
@@ -42,17 +43,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  onClickLanguage(language_code: string): void {
-    console.log('onClickLanguage');
-    if ( language_code === this.language_active) {
-      return;
-    }
-    this.language_active = language_code
-    this.languageService.setLanguage(language_code);
-  }
   onClickBackButton(): void {
     const query_params: Params = Object.assign({}, this.activatedRoute.snapshot.queryParams);
     this.router.navigate(['/login'], { queryParams: query_params } );
+  }
+  _samePath():string {
+    return this.authService._samePath();
   }
 
 

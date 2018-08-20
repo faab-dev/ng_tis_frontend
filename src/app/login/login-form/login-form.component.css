@@ -68,10 +68,6 @@ h1 {
   margin-bottom: 30px;
 }
 
-.alert-danger {
-  color: #a94442;
-}
-
 .uma_button_login {
   color: #8E97A7;
   cursor: pointer;
@@ -83,3 +79,22 @@ h1 {
   color: #1F3057;
   text-decoration: none;
 }
+
+div > span.uma_button_login {
+  cursor: pointer;
+}
+
+div.disabled > span.uma_button_login {
+  cursor: not-allowed;
+}
+
+div.disabled > span.uma_button_login:hover {
+  color: #8E97A7;
+}
+
+
+.alert-danger {
+  color: #a94442;
+}
+
+

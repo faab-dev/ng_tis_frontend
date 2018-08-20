@@ -7,12 +7,13 @@ import { LoginChoiceComponent } from './login-choice/login-choice.component';
 import { LoginPhoneComponent } from './login-phone/login-phone.component';
 import { LoginQRComponent } from './login-qr/login-qr.component';
 import { LoginFormComponent } from './login-form/login-form.component';
+import {UsersComponent} from "../tis-admin/users/users.component";
 
 /*const loginRoutes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [AuthGuardService], }
 ];*/
 
-const loginRoutes: Routes = [
+const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
@@ -37,7 +38,7 @@ const loginRoutes: Routes = [
 
 @NgModule({
   imports: [
-    RouterModule.forChild(loginRoutes)
+    RouterModule.forChild(routes)
   ],
   exports: [
     RouterModule

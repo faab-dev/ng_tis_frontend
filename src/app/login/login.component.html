@@ -9,7 +9,7 @@
   </div>
 </div>
 <div class="uma_lang_switcher">
-  <div class="uma_lang" *ngFor="let language of languages" [ngClass]="{ 'uma_active_lang': language.code === language_active }" (click)="onClickLanguage(language.code)">
+  <div class="uma_lang" *ngFor="let language of languages" [routerLink]="[_samePath()]" [queryParams]="{lang: language.code}" queryParamsHandling="merge" routerLinkActive="uma_active_lang" [routerLinkActiveOptions]="{exact: true}">
     {{ language.code | uppercase }}
   </div>
 </div>

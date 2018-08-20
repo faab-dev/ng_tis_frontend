@@ -11,8 +11,8 @@ import { LoginChoiceComponent } from './login-choice/login-choice.component';
 import { LoginPhoneComponent } from './login-phone/login-phone.component';
 import { LoginQRComponent } from './login-qr/login-qr.component';
 import { LoginFormComponent } from './login-form/login-form.component';
-import { FormErrorComponent } from '../template/form/form-error/form-error.component';
-import {TemplateModule} from '../template/template.module';
+import { TemplateModule } from '../template/template.module';
+import { FormatMillisecondsPipe } from "../shared/pipe/format-milliseconds.pipe";
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -38,7 +38,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     LoginChoiceComponent,
     LoginPhoneComponent,
     LoginQRComponent,
-    LoginFormComponent
+    LoginFormComponent,
+    FormatMillisecondsPipe
   ],
   providers: [
     AlertService

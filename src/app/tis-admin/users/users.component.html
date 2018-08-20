@@ -1,0 +1,27 @@
+<p>
+  users works!
+</p>
+<div >
+  <div class="item">
+    <div>id</div>
+    <div>
+      <app-list-sort [list_attribute]="query_users_list_sort_property.N" [query_active_sort]="{sort: query_active.sort, direction: query_active.direction}" (sort_emmited)="onSort($event)"></app-list-sort>
+      name
+    </div>
+    <div>
+      <app-list-sort [list_attribute]="query_users_list_sort_property.L" [query_active_sort]="{sort: query_active.sort, direction: query_active.direction}" (sort_emmited)="onSort($event)"></app-list-sort>
+      login
+    </div>
+    <div>
+      <app-list-sort [list_attribute]="query_users_list_sort_property.D" [query_active_sort]="{sort: query_active.sort, direction: query_active.direction}" (sort_emmited)="onSort($event)"></app-list-sort>
+      whenCreated
+    </div>
+  </div>
+  <div *ngFor="let user of $users | async" class="item">
+    <div>{{user.id}}</div>
+    <div>{{user.name}}</div>
+    <div>{{user.login}}</div>
+    <div>{{user.whenCreated}}</div>
+  </div>
+</div>
+<app-list-paginator target="/tis-admin/users" [page]="pageTestFirst" (page_emmited)="onPage($event)"></app-list-paginator>

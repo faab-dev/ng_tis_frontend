@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -14,12 +14,14 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 
 import { LoginModule } from './login/login.module';
 import { InstallerModule } from './installer/installer.module';
+import { TisAdminModule } from "./tis-admin/tis-admin.module";
 import { AppRoutingModule } from './app-routing.module';
 
 import { LanguageService } from './shared/service/language.service';
 import { PageNotAccessibleComponent } from './page-not-accessible/page-not-accessible.component';
-import { TemplateModule } from './template/template.module';
-import {FormErrorComponent} from './template/form/form-error/form-error.component';
+import { RefreshTokenInterceptor } from "./shared/interceptor/refresh-token.interceptor";
+
+
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -30,6 +32,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppComponent,
     PageNotFoundComponent,
     PageNotAccessibleComponent
+    // FormatMillisecondsPipe
   ],
   exports: [
   ],
@@ -49,11 +52,16 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     LoginModule,
     InstallerModule,
+    TisAdminModule,
     AppRoutingModule
 
   ],
   providers: [
-    LanguageService
+    LanguageService, {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RefreshTokenInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
