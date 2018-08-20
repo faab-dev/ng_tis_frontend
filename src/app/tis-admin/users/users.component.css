@@ -1,0 +1,20 @@
+.item {
+  outline: 1px yellow solid;
+}
+
+.item > div {
+  display: inline-block;
+  padding: 0 10px;
+  width: 19%;
+}
+
+.pager > span {
+  cursor: pointer;
+}
+.pager > span:hover {
+  color: #8E97A7;
+}
+
+.disabled {
+  color: red;
+}

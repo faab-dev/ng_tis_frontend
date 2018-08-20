@@ -1,0 +1,13 @@
+<ul>
+  <li>Users</li>
+  <li>Equipments</li>
+</ul>
+<div>
+  <div class="uma_lang" *ngFor="let language of languages" [ngClass]="{ 'uma_active_lang': language.code === language_active }" (click)="onClickLanguage(language.code)">
+    {{ language.code | uppercase }}
+  </div>
+</div>
+<p>
+  tis-admin works!
+  <router-outlet></router-outlet>
+</p>

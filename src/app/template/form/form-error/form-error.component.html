@@ -1,0 +1,9 @@
+<!--<div>display_error: {{display_error}}</div>
+<div>{{errors | json }}</div>-->
+<!--<div>{{ errors | json }}</div>-->
+<div *ngIf="display_error" class="alert alert-danger">
+  <div *ngFor="let error of errors_modified">
+    <div class="error_item">{{ 'template.form.error.' + error | translate}}</div>
+  </div>
+  <!-- loginForm.controls.login.errors.minlength -->
+</div>

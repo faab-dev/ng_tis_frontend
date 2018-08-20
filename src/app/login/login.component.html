@@ -1,0 +1,18 @@
+<div class="uma_container_main">
+  <div>
+    <div class="uma_login_group">
+      <img src="assets/images/logo_login.png">
+      <div class="uma_auth_conainer">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="uma_lang_switcher">
+  <div class="uma_lang" *ngFor="let language of languages" [routerLink]="[_samePath()]" [queryParams]="{lang: language.code}" queryParamsHandling="merge" routerLinkActive="uma_active_lang" [routerLinkActiveOptions]="{exact: true}">
+    {{ language.code | uppercase }}
+  </div>
+</div>
+<div class="uma_back_btn" [ngClass]="{'behind': !show_back_button}">
+  <a href (click)="$event.preventDefault();onClickBackButton()">{{'login.back_button'|translate}}</a>
+</div>

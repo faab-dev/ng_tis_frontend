@@ -1,0 +1,14 @@
+<div class="form-phone-number-countries-list">
+  <div class="form-phone-number-country-current" (click)="onTouched(); onClickCountryList()">
+    <span [class]="'current-iti-flag iti-flag '+selected_country.flagClass"></span>
+    <span class="current-dial-code dial-code">+{{selected_country.dialCode}}</span>
+    <input [(ngModel)]="phone_number" (keyup)="onKeyUpPhoneNumberWithoutDialCode()" placeholder="900 123-45-67">
+  </div>
+  <div class="form-phone-number-countries" [ngClass]="{'hide-country-list': !display_country_list}">
+    <div *ngFor="let country of countries_all_fetched" class="form-phone-number-country" (click)="onClickCountry(country)">
+      <span class="list-dial-code dial-code">+{{country.dialCode}}</span>
+      <span [class]="'list-iti-flag iti-flag '+country.flagClass"></span>
+      <span class="list-country-name country-name">{{country.name}}</span>
+    </div>
+  </div>
+</div>

@@ -3,7 +3,13 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+
+  languages: [
+    {code: 'ru', title: 'Русский'},
+    {code: 'en', title: 'English'},
+  ],
+  language_default_code: 'ru'
 };
 
 /*

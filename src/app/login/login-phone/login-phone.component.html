@@ -1,0 +1,22 @@
+<h1 data-i18n-text="auth_type_login_title">{{ 'login.phone' | translate }}</h1>
+
+<form [formGroup]="phoneNumberForm">
+  <app-form-phone-number formControlName="phone"></app-form-phone-number>
+</form>
+<app-form-error [display_error]="helperIsValideForm('phone')" [errors]="phoneNumberForm.controls.phone.errors"></app-form-error>
+
+<!--<div>Form value: {{phoneNumberForm.value | json}}</div>
+<p>Form status: {{ phoneNumberForm.status | json }}</p>
+<p>Form password errors: {{ phoneNumberForm.controls.phone.errors | json }}</p>-->
+
+<div class="uma_type_auth_phone_btn" (click)="onClickButtonAcceptPhone()" [ngClass]="{ 'disabled': isDisabled() }" [title]="getSubmitTitle() | translate">
+  <div>
+    <span>{{ getSubmitValue() | translate }}</span>
+    <span class="uma_timer">{{ button_timeout | formatMilliseconds }}</span>
+  </div>
+</div>
+<div class="uma_type_auth_error uma_err"></div>
+
+<!--<div class="uma_back_btn">
+  <a href="#" data-i18n-text="back_btn">Назад</a>
+</div>-->

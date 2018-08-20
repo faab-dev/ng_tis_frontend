@@ -1,0 +1,12 @@
+<h1 data-i18n-text="auth_type_choice">{{'login.choose'|translate}}</h1>
+<div>
+  <div class="uma_auth_type phone" (click)="onClickPhone()">
+    <img src="assets/uma_ic_phone_off.svg">
+    <div data-i18n-text="auth_type_phone">{{'login.phone_title'|translate}}</div>
+  </div>
+  <div class="uma_auth_type qr" (click)="onClickQR()">
+    <img src="assets/uma_ic_qr_off.svg">
+    <div data-i18n-text="auth_type_qr">{{'login.qr_title'|translate}}</div>
+  </div>
+</div>
+<div id="spinner"></div>

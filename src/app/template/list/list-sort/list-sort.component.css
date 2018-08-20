@@ -1,0 +1,8 @@
+.list-sort {
+  display: inline-block;
+  width: 15px;
+}
+
+.list-sort > img {
+  cursor: pointer;
+}
